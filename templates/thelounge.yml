@@ -1,0 +1,23 @@
+# Change the following value to match your setup:
+# change-me-1 is the domain name for your thelounge instance
+services:
+  thelounge:
+    image: ghcr.io/thelounge/thelounge:latest
+    restart: always
+    volumes:
+      - thelounge-data:/var/opt/thelounge
+    networks:
+      - dokploy-network
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.thelounge.entrypoints=websecure"
+     - "traefik.http.routers.thelounge.tls.certResolver=letsencrypt"
+     - "traefik.http.routers.thelounge.rule=Host(`change-me-1`)"
+     - "traefik.http.services.thelounge.loadbalancer.server.port=9000"
+
+networks:
+ dokploy-network:
+   external: true
+
+volumes:
+  thelounge-data:

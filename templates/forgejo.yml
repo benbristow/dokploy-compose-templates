@@ -1,0 +1,54 @@
+# Change the following values to match your setup:
+# change-me-1 is the password for the postgres database
+# change-me-2 is the domain name for your gitea instance
+services:
+  gitea:
+    image: codeberg.org/forgejo/forgejo:8 # Does not update itself, requires manual update process
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=gittea_db:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=postgres
+      - GITEA__database__PASSWD=change-me-1
+      - GITEA__server__DOMAIN=change-me-2
+      - GITEA__server__ROOT_URL=https://change-me-2/
+      - GITEA__service__DISABLE_SSH=true
+      - GITEA__service__DISABLE_REGISTRATION=true
+    volumes:
+      - gitea_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+    depends_on:
+      - gittea_db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitea.rule=Host(`change-me-2`)"
+      - "traefik.http.routers.gitea.entrypoints=websecure"
+      - "traefik.http.routers.gitea.tls=true"
+      - "traefik.http.routers.gitea.tls.certresolver=letsencrypt"
+      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
+
+  gittea_db:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=change-me-1 # Match the change-me-1 password in the gitea service
+      - POSTGRES_DB=gitea
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+
+volumes:
+  gitea_data:
+  postgres_data:
+
+networks:
+  dokploy-network:
+    external: true

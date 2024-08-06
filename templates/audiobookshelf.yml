@@ -1,0 +1,36 @@
+# Change the following values to match your setup:
+# change-me-1 is the domain name for your audiobookshelf instance
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    restart: always
+    networks:
+      - dokploy-network
+    volumes:
+      - audiobooks:/audiobooks
+      - podcasts:/podcasts
+      - config:/config
+      - metadata:/metadata
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.audiobookshelf.rule=Host(`change-me-1`)"
+      - "traefik.http.routers.audiobookshelf.entrypoints=websecure"
+      - "traefik.http.routers.audiobookshelf.tls=true"
+      - "traefik.http.routers.audiobookshelf.tls.certresolver=letsencrypt"
+      - "traefik.http.services.audiobookshelf.loadbalancer.server.port=80"
+      # Increase upload size limit for large audiobook files
+      - "traefik.http.middlewares.audiobookshelf-upload.buffering.memRequestBodyBytes=104857600"
+      - "traefik.http.middlewares.audiobookshelf-upload.buffering.maxRequestBodyBytes=104857600"
+      - "traefik.http.routers.audiobookshelf.middlewares=audiobookshelf-upload@docker"
+
+volumes:
+  audiobooks:
+  podcasts:
+  config:
+  metadata:
+
+networks:
+  dokploy-network:
+    external: true

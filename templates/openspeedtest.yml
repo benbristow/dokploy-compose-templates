@@ -1,0 +1,19 @@
+# Change the following value to match your setup:
+# change-me-1 is the domain name for your openspeedtest instance
+services:
+  openspeedtest:
+    image: openspeedtest/latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openspeedtest.rule=Host(`change-me-1`)"
+      - "traefik.http.routers.openspeedtest.entrypoints=websecure"
+      - "traefik.http.routers.openspeedtest.tls=true"
+      - "traefik.http.routers.openspeedtest.tls.certresolver=letsencrypt"
+      - "traefik.http.services.openspeedtest.loadbalancer.server.port=3000"
+    networks:
+      - dokploy-network
+
+networks:
+ dokploy-network:
+   external: true

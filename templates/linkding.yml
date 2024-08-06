@@ -1,0 +1,24 @@
+# Change the following value to match your setup:
+# change-me-1 is the domain name for your linkding instance
+services:
+  linkding:
+    image: sissbruecker/linkding:latest
+    volumes:
+      - "linkding-data:/etc/linkding/data"
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.linkding.entrypoints=websecure"
+      - "traefik.http.routers.linkding.tls.certResolver=letsencrypt"
+      - "traefik.http.routers.linkding.rule=Host(`change-me-1`)"
+    restart: unless-stopped
+
+volumes:
+  linkding-data:
+
+networks:
+  dokploy-network:
+    external: true

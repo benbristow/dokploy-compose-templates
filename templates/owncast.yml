@@ -1,0 +1,25 @@
+# Change the following value to match your setup:
+# change-me-1 is the domain name for your owncast instance
+services:
+  owncast:
+    image: owncast/owncast:latest
+    restart: 'unless-stopped'
+    ports:
+      - "1935:1935" # RTMP port
+    volumes:
+      - owncast-data:/app/data
+    networks:
+      - dokploy-network
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.owncast.entrypoints=websecure"
+     - "traefik.http.routers.owncast.tls.certResolver=letsencrypt"
+     - "traefik.http.routers.owncast.rule=Host(`change-me-1`)"
+     - "traefik.http.services.owncast.loadbalancer.server.port=8080"
+
+networks:
+ dokploy-network:
+   external: true
+
+volumes:
+  owncast-data:

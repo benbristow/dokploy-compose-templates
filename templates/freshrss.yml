@@ -1,0 +1,29 @@
+# Change the following value to match your setup:
+# change-me-1 is the domain name for your freshrss instance
+services:
+  freshrss:
+    image: 'linuxserver/freshrss:latest'
+    restart: always
+    hostname: 'change-me-1'
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - freshrss-data:/config
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.freshrss.entrypoints=websecure"
+      - "traefik.http.routers.freshrss.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.freshrss.rule=Host(`change-me-1`)"
+      - "traefik.http.services.freshrss.loadbalancer.server.port=80"
+
+networks:
+  dokploy-network:
+    external: true
+
+volumes:
+  freshrss-data:

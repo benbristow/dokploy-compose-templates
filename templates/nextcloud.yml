@@ -1,0 +1,50 @@
+# Change the following values to match your setup:
+# change-me-1 is the domain name for your nextcloud instance
+# change-me-2 is the database password for your nextcloud instance, make this strong
+# change-me-3 is the root database password for your nextcloud database, make this strong
+services:
+  nextcloud:
+    image: nextcloud
+    restart: always
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud-app.rule=Host(`change-me-1`)"
+      - "traefik.http.routers.nextcloud-app.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud-app.tls=true"
+      - "traefik.http.routers.nextcloud-app.tls.certresolver=letsencrypt"
+      - "traefik.http.services.nextcloud-app.loadbalancer.server.port=80"
+      - "traefik.http.services.nextcloud-app.loadbalancer.passhostheader=true"
+      - "traefik.http.routers.nextcloud-app.middlewares=compresstraefik"
+      - "traefik.http.middlewares.compresstraefik.compress=true"
+    volumes:
+      - nextcloud_data:/var/www/html
+    environment:
+      - NEXTCLOUD_TRUSTED_DOMAINS=change-me-1
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=change-me-2
+      - OVERWRITEPROTOCOL=https
+
+  nextcloud_db:
+    image: mariadb
+    restart: always
+    networks:
+      - dokploy-network
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=change-me-3
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=change-me-2
+
+volumes:
+  nextcloud_data:
+  nextcloud_db_data:
+
+networks:
+  dokploy-network:
+    external: true
