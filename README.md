@@ -1,4 +1,4 @@
-# Dokploy Compose Templates
+# Dokploy Compose 
 
 Collection of docker-compose configs for self-hosted tools, compatible with Dokploy (https://dokploy.com/)
 
@@ -49,6 +49,12 @@ Template for [OpenSpeedTest](https://www.openspeedtest.com/), an online network 
 Template for [Owncast](https://owncast.online/), a self-hosted live streaming platform, similar to Twitch.
 
 [View template file](/templates/owncast.yml)
+
+### prowlarr.yml
+
+Template for [Prowlarr](https://github.com/Prowlarr/Prowlarr), a self-hosted torrent/NZB indexer for downloading Linux ISOs.
+
+[View template file](/templates/prowlarr.yml)
 
 ### thelounge.yml
 

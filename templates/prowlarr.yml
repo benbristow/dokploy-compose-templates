@@ -1,0 +1,28 @@
+# Change the following value to match your setup:
+# change-me-1 is the domain name for your Prowlarr instance
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - prowlarr-data:/config
+    networks:
+      - dokploy-network
+    labels:
+     - "traefik.enable=true"
+     - "traefik.http.routers.prowlarr.entrypoints=websecure"
+     - "traefik.http.routers.prowlarr.tls.certResolver=letsencrypt"
+     - "traefik.http.routers.prowlarr.rule=Host(`change-me-1`)"
+     - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+    restart: unless-stopped
+
+networks:
+ dokploy-network:
+   external: true
+
+volumes:
+  prowlarr-data:
