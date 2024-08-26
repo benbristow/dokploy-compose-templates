@@ -18,7 +18,7 @@ Template for [Audiobookshelf](https://www.audiobookshelf.org/), a self-hosted au
 
 Template for [Forgejo](https://forgejo.org/), a fork of Gitea, a self-hosted git server, similar to GitHub.
 
-[View template file](/templates/audiobookshelf.yml)
+[View template file](/templates/forgejo.yml)
 
 ### freshrss.yml
 
