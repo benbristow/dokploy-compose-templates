@@ -4,7 +4,7 @@ Collection of docker-compose configs for self-hosted tools, compatible with Dokp
 
 See below for advice on using Dokploy's compose feature.
 
-https://docs.dokploy.com/en/docs/core/docker-compose/example
+https://docs.dokploy.com/docs/core/docker-compose/example
 
 ## Templates
 
